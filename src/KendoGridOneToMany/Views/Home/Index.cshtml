@@ -1,0 +1,54 @@
+﻿@using KendoGridOneToMany.Models
+
+@{
+    ViewBag.Title = "Kendo Page";
+}
+
+<h1>Grid here</h1>
+
+@(Html.Kendo().Grid<ProductModel>()
+            .Name("persons")
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(m => m.Id))
+                .Read(read => read.Action("GetProducts", "Home"))
+                .Update(up => up.Action("UpdateProduct", "Home"))
+                .Create(x => x.Action("CreateProduct", "Home"))
+        )
+        .ToolBar(x => x.Create())
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.Id).Width(200);
+            columns.Bound(c => c.Type);
+            columns.Bound(c => c.DisplayCatogories);
+            columns.Command(cmd => cmd.Edit());
+        })
+        .Events(ev => ev.Edit("addDeleteButton"))
+        .Pageable()
+        .Sortable()
+    .Editable(ed => ed.Mode(GridEditMode.PopUp).TemplateName("PopUpView"))
+)
+
+<h2>Kendo UI DatePicker</h2>
+
+@(Html.Kendo().DatePicker()
+            .Name("datepicker")
+)
+
+<script type="text/javascript">
+    function addDeleteButton(e) {
+        var grid = e.sender;
+        var table = grid.table;
+        var uid = e.model.uid;
+        $('<a class="k-button k-button-icontext k-grid-delete custom" href="\\#"k-icon k-i-delete"></span>Delete</a>').insertAfter(".k-grid-update");
+        $('.k-window-title').test("Edit Roles");
+        $(".custom").click(function (e) {
+            e.preventDefault();
+            var formContainer = $("#popUpForm");
+            SubmitInfo(formContainer);
+        });
+    }
+
+
+</script>
+

@@ -1,0 +1,32 @@
+﻿@model KendoGridOneToMany.Models.ProductModel
+
+@*<h3> Available  </h3>
+<br />*@
+
+@*<script>
+        function filterNames() {
+            return {
+                id: $("#name").val()
+            };
+        }
+    </script>*@
+
+
+@Html.HiddenFor(model => model.Id)
+
+<div>
+    <h3>Add new category</h3>
+    @(Html.Kendo().DropDownList()
+              .Name("Name")
+                  .OptionLabel("Select Category")
+                  .DataTextField("Name")
+                  .DataValueField("Id")
+              .DataSource(source =>
+              {
+                  source.Read(read =>
+                  {
+                      read.Action("GetCategories", "Home");
+                  });
+              })
+    )
+</div>
