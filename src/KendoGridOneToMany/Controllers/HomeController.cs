@@ -15,10 +15,13 @@ namespace KendoGridOneToMany.Controllers
     public class HomeController : Controller
     {
         private Random random = new Random();
-        private SiteRepository siteRepository = new SiteRepository();
+        private static SiteRepository siteRepository = new SiteRepository();
 
         public IActionResult Index()
         {
+            ViewData["categories"] = siteRepository.GetAllCategories();
+
+
             return View();
         }
 
@@ -55,22 +58,20 @@ namespace KendoGridOneToMany.Controllers
         }
 
 
-        public ActionResult UpdateProduct([DataSourceRequest] DataSourceRequest dsRequest, ProductModel productModel)
+        public ActionResult UpdateCategory([DataSourceRequest] DataSourceRequest dsRequest, ProductModel productModel)
         {
-            if (productModel != null && ModelState.IsValid)
-            {
-                var toUpdate = siteRepository.UpdateProducts(productModel);
-            }
-            else
-            {
-                this.ModelState.AddModelError("RoleAlreadyAssigned", "Role is already assigned to user");
-            }
-
-            //List<UserViewModel> allUsersViewModels = this.userService.GetUserList().ToList();
-            //return this.Json(allUsersViewModels.ToDataSourceResult(request, this.ModelState));
 
 
-            return this.Json(ModelState.ToDataSourceResult());
+            //if (productModel != null && ModelState.IsValid)
+            //{
+                var updated = siteRepository.AddCategory(productModel);
+            //}
+            //else
+            //{
+            //    this.ModelState.AddModelError("RoleAlreadyAssigned", "Role is already assigned to user");
+            //}
+
+            return this.Json(updated.ToDataSourceResult(dsRequest));
         }
 
 
@@ -80,10 +81,12 @@ namespace KendoGridOneToMany.Controllers
 
         }
 
-        public ActionResult GetCategories()
+        public JsonResult GetCategories()
         {
-            return this.Json(siteRepository.GetAllCategories());
+            var result = siteRepository.GetAllCategories();
+            return Json(result);
         }
+
 
         public ActionResult AddCategories()
         {

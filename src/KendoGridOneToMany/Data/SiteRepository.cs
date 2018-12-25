@@ -18,13 +18,13 @@
         {
             products = new List<ProductModel>()
                            {
-                               new ProductModel() { Id = 1, Type = "Apples" },
-                               new ProductModel() { Id = 2, Type = "Potatos" },
-                               new ProductModel() { Id = 3, Type = "Peas" },
-                               new ProductModel() { Id = 4, Type = "Beans" },
-                               new ProductModel() { Id = 5, Type = "Basil" },
-                               new ProductModel() { Id = 6, Type = "Yogurt" },
-                               new ProductModel() { Id = 7, Type = "Milk" }
+                               new ProductModel() { Id = 1, Type = "Apples" , Categories = new List<CategoryModel>()},
+                               new ProductModel() { Id = 2, Type = "Potatos", Categories = new List<CategoryModel>()},
+                               new ProductModel() { Id = 3, Type = "Peas", Categories = new List<CategoryModel>()},
+                               new ProductModel() { Id = 4, Type = "Beans", Categories = new List<CategoryModel>()},
+                               new ProductModel() { Id = 5, Type = "Basil", Categories = new List<CategoryModel>()},
+                               new ProductModel() { Id = 6, Type = "Yogurt", Categories = new List<CategoryModel>()},
+                               new ProductModel() { Id = 7, Type = "Milk", Categories = new List<CategoryModel>()}
                            };
 
             categories = new List<CategoryModel>()
@@ -55,11 +55,32 @@
             return category;
         }
 
-        public ProductModel UpdateProducts(ProductModel updatedProduct)
+        public ProductModel UpdateProduct(ProductModel updatedProduct)
         {
-            var product = products.Where(c => c.Id == updatedProduct.Id).FirstOrDefault();
-            product = updatedProduct;
-            return product;
+            var product = products.Where(i => i.Id == updatedProduct.Id).First();
+            var index = products.IndexOf(product);
+
+            if (index != -1)
+            {
+                products[index] = updatedProduct;
+            }
+
+            var pd = products;
+
+            return updatedProduct;
+        }
+
+        public List<ProductModel> AddCategory(ProductModel updatedProduct)
+        {
+            var product = products.Where(i => i.Id == updatedProduct.Id).First();
+            var index = products.IndexOf(product);
+
+            if (index != -1)
+            {
+                products[index].Categories.Add(updatedProduct.Category);
+            }
+
+            return products;
         }
 
         public CategoryModel GetCategoryById(int iD)
