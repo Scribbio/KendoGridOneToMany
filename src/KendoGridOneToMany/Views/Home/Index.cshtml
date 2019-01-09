@@ -23,7 +23,7 @@
             columns.Bound(c => c.DisplayCatogories);
             columns.Command(cmd => cmd.Edit());
         })
-        //.Events(ev => ev.Edit("addDeleteButton"))
+        .Events(ev => ev.Edit("addDeleteButton"))
         .Pageable()
         .Sortable()
 .Editable(ed => ed.Mode(GridEditMode.PopUp).TemplateName("PopUpView"))
@@ -36,26 +36,26 @@
             .Name("datepicker")
 )*@
 
-@*<script type="text/javascript">
+<script type="text/javascript">
     function addDeleteButton(e) {
         var grid = e.sender;
         var table = grid.table;
         var uid = e.model.uid;
         $('<a class="k-button k-button-icontext k-grid-delete custom" href="\\#"k-icon k-i-delete"></span>Delete</a>').insertAfter(".k-grid-update");
-        //$('.k-window-title').test("Edit Roles");
-        $(".custom").click(function (e) {
-            e.preventDefault();
-            var formContainer = $("#popUpForm");
-            SubmitInfo(formContainer);
-        });
+        $('.k-window-title').test("Edit Roles");
+        //$(".custom").click(function (e) {
+        //    e.preventDefault();
+        //    var formContainer = $("#popUpForm");
+        //    SubmitInfo(formContainer);
+        //});
     }
 
-    function SubmitInfo(formContainer) {
-        var grid = $(#productsGrid).data("kendoGrid");
-        var parameterMap = grid.dataSource.transport.parameterMap; 
+    //function SubmitInfo(formContainer) {
+    //    var grid = $(#productsGrid).data("kendoGrid");
+    //    var parameterMap = grid.dataSource.transport.parameterMap; 
 
-    }
+    //}
 
 
-</script>*@
+</script>
 

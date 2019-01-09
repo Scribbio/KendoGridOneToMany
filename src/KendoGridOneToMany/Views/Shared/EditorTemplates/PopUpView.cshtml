@@ -1,32 +1,22 @@
 ﻿@model ProductModel
 
 
-@*<fieldset>*@
-@*<tbody>
-    @Html.HiddenFor(model => model.Id)
-    @Html.HiddenFor(model => model.CategoryId)
-    @Html.HiddenFor(model => model.Category)
+<div>
+    <fieldset id="popUpForm">
+        <dl>
+            <dt>
+                    @Html.ValidationMessageFor(m => m.Category)
+            </dt>
+            <dd>
+                @(Html.Kendo().DropDownListFor(m => m.Category).AutoBind(false).OptionLabel("Select Category...").DataTextField("Name").DataValueField("Id").DataSource(dataSource =>
+                                              { dataSource.Read(read => read.Action("GetCategories", "Home")).ServerFiltering(true); }))
+            </dd>
+        </dl>
+    </fieldset>
+</div>
 
-    <tr>
-        <td>@Html.LabelFor(model => model.Categories)</td>
-        <td>
-            @(Html.Kendo().DropDownListFor(m => m)
-                                                    .Name("Role")
-                                                    .DataTextField("Name")
-                                                    .DataValueField("Id")
 
-                    /**/
-                    @*.DataSource(source =>
-                    {
-                        source.Read("GetCategories", "Home");
-                    }))*@
-@*/**/
-    .BindTo((System.Collections.IEnumerable)ViewData["categories"]))
-
-    </td>*@
-@*</tr>*@
-
-@using (Html.BeginForm())
+@*@using (Html.BeginForm())
 {
     <fieldset>
         @Html.AntiForgeryToken()
@@ -36,25 +26,25 @@
         <div class="editor-field">
             @Html.ValidationMessageFor(model => model.Category)
             @(Html.Kendo().DropDownListFor(model => model.Category)
-                                                      .OptionLabel("Select Car Model")
-                                                      .DataTextField("Name")
-                                                      .DataValueField("Id")
-                                                      .DataSource(source =>
-                                                      {
-                                                          source.Read(read =>
-                                                          {
-                                                              read.Action("GetCategories", "Home")
-                                                                  /*.Data("filterModels")*/;
-                                                          })
-                                                          .ServerFiltering(true);
-                                                      })
-                                                      .Enable(true)
-            //.AutoBind(false)
-            //.CascadeFrom("Id")
+                                                              .OptionLabel("Select Car Model")
+                                                              .DataTextField("Name")
+                                                              .DataValueField("Id")
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetCategories", "Home")
+                                                                          /*.Data("filterModels")*/;
+                                                                  })
+                                                                  .ServerFiltering(true);
+                                                              })
+                                                              .Enable(true)
+                    //.AutoBind(false)
+                    //.CascadeFrom("Id")
             )
         </div>
     </fieldset>
-}
+}*@
 
 
 
@@ -64,41 +54,41 @@
 
 
 
-    @*<div class="k-edit-form-container">
-            <h3>Customized Person edit template</h3>
-            <br />
-            <div class="k-edit-field">
-                @(Html.Kendo().DropDownListFor(m => m.Category)
-                            .Name("TicketStatus")
-                          .DataValueField("Id")
-                            .DataTextField("Name")
-                            .DataSource(source =>
-                            {
-                                source.Read("GetCategories", "Home")
-                                .ServerFiltering();
-                            }))
-            </div>
-        </div>*@
-
-
-
-    @*<div class="form-group">
-            @Html.LabelFor(x => Model.Category, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
-
-                @(Html.Kendo().DropDownListFor(m => m.Category)
-                    .OptionLabel("Select Category")
-                    .DataTextField("Name")
-                    .DataValueField("Id")
-                    .DataSource(source =>
+@*<div class="k-edit-form-container">
+        <h3>Customized Person edit template</h3>
+        <br />
+        <div class="k-edit-field">
+            @(Html.Kendo().DropDownListFor(m => m.Category)
+                        .Name("TicketStatus")
+                      .DataValueField("Id")
+                        .DataTextField("Name")
+                        .DataSource(source =>
                         {
-                            source.Read(read =>
-                        {
-                            read.Action("GetCategories", "Home");
-                        });
-                        })
-                )
+                            source.Read("GetCategories", "Home")
+                            .ServerFiltering();
+                        }))
+        </div>
+    </div>*@
 
-                @Html.ValidationMessageFor(x => x.Category, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+
+
+@*<div class="form-group">
+        @Html.LabelFor(x => Model.Category, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-5">
+
+            @(Html.Kendo().DropDownListFor(m => m.Category)
+                .OptionLabel("Select Category")
+                .DataTextField("Name")
+                .DataValueField("Id")
+                .DataSource(source =>
+                    {
+                        source.Read(read =>
+                    {
+                        read.Action("GetCategories", "Home");
+                    });
+                    })
+            )
+
+            @Html.ValidationMessageFor(x => x.Category, "", new { @class = "text-danger" })
+        </div>
+    </div>*@
