@@ -42,20 +42,63 @@
         var table = grid.table;
         var uid = e.model.uid;
         $('<a class="k-button k-button-icontext k-grid-delete custom" href="\\#"k-icon k-i-delete"></span>Delete</a>').insertAfter(".k-grid-update");
-        $('.k-window-title').test("Edit Roles");
-        //$(".custom").click(function (e) {
-        //    e.preventDefault();
-        //    var formContainer = $("#popUpForm");
-        //    SubmitInfo(formContainer);
-        //});
+        $('.k-window-title').text("Edit Roles");
+        $(".custom").click(function (e) {
+            e.preventDefault();
+            var formContainer = $("#PopUpView");
+            SubmitInfo(formContainer);
+        });
     }
 
-    //function SubmitInfo(formContainer) {
-    //    var grid = $(#productsGrid).data("kendoGrid");
-    //    var parameterMap = grid.dataSource.transport.parameterMap; 
+    function SubmitInfo(formContainer) {
 
+        var grid = $("#persons").data("kendoGrid"),
+            parameterMap = grid.dataSource.transport.parameterMap;
+        var data = parameterMap({ sort: grid.dataSource.sort(), filter: grid.dataSource.filter(), group: grid.dataSource.group() });
+        $.ajax({
+            url: "Home/Delete",
+            type: 'post',
+            dataType: 'json',
+            //data: formContainer.serialize(),
+            data: data + "&" + formContainer.serialize(),
+            success: function (result) {
+                if (result.Errors) {
+                    //Send error message to grid
+                    var grid = $("#persons").data("kendoGrid");
+                    //showMessage(grid.editable.element, result.Errors.RoleNotExist.errors[0], result.Errors.RoleNotExist.errors);
+                }
+                else {
+                    // Clear the input tags
+                    formContainer.find("input[type='text']").each(function (i, element) {
+                        $(this).val('');
+                    });
+                    $('#persons').data('kendoGrid').dataSource.read();
+                    $('#persons').data('kendoGrid').refresh();
+                }
+            }
+        });
+    }
+
+    //var validationMessageTmpl = kendo.template($("#message").html());
+
+    //// handle grid error event
+    //error = function (args) {
+    //    if (args.errors) {
+    //        var grid = $("#persons").data("kendoGrid");
+    //        grid.one("dataBinding", function (e) {
+    //            e.preventDefault();   // cancel grid rebind if error occurs
+    //            for (var error in args.errors) {
+    //                showMessage(grid.editable.element, error, args.errors[error].errors);
+    //            }
+    //        });
+    //    }
     //}
 
+    //function showMessage(container, name, errors) {
+    //    //add the validation message to the form
+    //    container.find("[data-valmsg-for=" + "Id" + "]")
+    //        .replaceWith(validationMessageTmpl({ field: name, message: errors[0] }));
+    //}
 
 </script>
 

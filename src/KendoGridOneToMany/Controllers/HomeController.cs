@@ -94,24 +94,42 @@ namespace KendoGridOneToMany.Controllers
         }
 
         [HttpPost]
-        public JsonResult Delete([DataSourceRequest] DataSourceRequest request, ProductModel productModel)
+        public JsonResult Delete([DataSourceRequest] DataSourceRequest request, ProductModel product)
         {
-            //var user = this.userService.GetByGid(userViewModel.Gid);
-            //var roleToRemove = user.UserRoles.SingleOrDefault(r => r.Id == userViewModel.RoleId);
-            //if (roleToRemove != null)
-            //{
-            //    user.UserRoles.Remove(roleToRemove);
-            //    this.userService.Update(user);
-            //}
-            //else
-            //{
-            //    this.ModelState.AddModelError("RoleNotExist", "CategoryModel is not assigned to user");
-            //}
+            var productModel = siteRepository.GetProductById(product.Id);
+            var categoryToRemove = productModel.Categories.SingleOrDefault(r => r.Id == product.Category.Id);
+            if (categoryToRemove != null)
+            {
+                product.Categories.Remove(categoryToRemove);
+                siteRepository.UpdateProduct(product);
+            }
+            else
+            {
+                this.ModelState.AddModelError("RoleNotExist", "CategoryModel is not assigned to user");
+            }
 
-            //List<UserViewModel> allUsersViewModels = this.userService.GetUserList().ToList();
-            //return this.Json(allUsersViewModels.ToDataSourceResult(request, this.ModelState));
+            List<ProductModel> allProductModels = siteRepository.GetAllProducts();
+            return this.Json(allProductModels.ToDataSourceResult(request, this.ModelState));
 
-            return this.Json(null);
+            //return this.Json(null);
         }
+
+    //    var product = siteRepository.GetProductById(productModel.Id);
+    //    var categoryToRemove = user.UserRoles.SingleOrDefault(r => r.Id == userViewModel.RoleId);
+    //        if (roleToRemove != null)
+    //        {
+    //            user.UserRoles.Remove(roleToRemove);
+    //            this.userService.Update(user);
+    //        }
+    //        else
+    //        {
+    //            this.ModelState.AddModelError("RoleNotExist", "CategoryModel is not assigned to user");
+    //}
+
+    //List<UserViewModel> allUsersViewModels = this.userService.GetUserList().ToList();
+    //        return this.Json(allUsersViewModels.ToDataSourceResult(request, this.ModelState));
+
+    //        return this.Json(null);
+
     }
 }

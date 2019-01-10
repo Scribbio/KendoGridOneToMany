@@ -5,7 +5,7 @@
     <fieldset id="popUpForm">
         <dl>
             <dt>
-                    @Html.ValidationMessageFor(m => m.Category)
+                    @Html.ValidationMessageFor(m => m.Id)
             </dt>
             <dd>
                 @(Html.Kendo().DropDownListFor(m => m.Category).AutoBind(false).OptionLabel("Select Category...").DataTextField("Name").DataValueField("Id").DataSource(dataSource =>
