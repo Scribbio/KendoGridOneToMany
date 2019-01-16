@@ -5,11 +5,24 @@
     <fieldset id="popUpForm">
         <dl>
             <dt>
-                    @Html.ValidationMessageFor(m => m.Id)
+                @Html.HiddenFor(m => m.Categories)
+            </dt>
+            <dt>
+                @Html.HiddenFor(m => m.Id)
+            </dt>
+            <dt>
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.Category)
+
             </dt>
             <dd>
-                @(Html.Kendo().DropDownListFor(m => m.Category).AutoBind(false).OptionLabel("Select Category...").DataTextField("Name").DataValueField("Id").DataSource(dataSource =>
-                                              { dataSource.Read(read => read.Action("GetCategories", "Home")).ServerFiltering(true); }))
+
+                @Html.ValidationMessageFor(m => m.CategoryId)
+
+                @(Html.Kendo().DropDownListFor(m => m.CategoryId).AutoBind(true).OptionLabel("Select Category...").DataTextField("Name").DataValueField("Id").DataSource(dataSource =>
+                                                                                              { dataSource.Read(read => read.Action("GetCategories", "Home")).ServerFiltering(true); }))
+
+
             </dd>
         </dl>
     </fieldset>

@@ -71,7 +71,7 @@ namespace KendoGridOneToMany.Controllers
             //    this.ModelState.AddModelError("RoleAlreadyAssigned", "Role is already assigned to user");
             //}
 
-            return this.Json(updated.ToDataSourceResult(dsRequest));
+            return this.Json(siteRepository.GetAllProducts().ToDataSourceResult(dsRequest));
         }
 
 
@@ -94,10 +94,10 @@ namespace KendoGridOneToMany.Controllers
         }
 
         [HttpPost]
-        public JsonResult Delete([DataSourceRequest] DataSourceRequest request, ProductModel product)
+        public JsonResult Delete([DataSourceRequest] DataSourceRequest request, ProductModel productModel)
         {
-            var productModel = siteRepository.GetProductById(product.Id);
-            var categoryToRemove = productModel.Categories.SingleOrDefault(r => r.Id == product.Category.Id);
+            var product= siteRepository.GetProductById(productModel.Id);
+            var categoryToRemove = product.Categories.SingleOrDefault(r => r.Id == productModel.CategoryId);
             if (categoryToRemove != null)
             {
                 product.Categories.Remove(categoryToRemove);
@@ -107,11 +107,7 @@ namespace KendoGridOneToMany.Controllers
             {
                 this.ModelState.AddModelError("RoleNotExist", "CategoryModel is not assigned to user");
             }
-
-            List<ProductModel> allProductModels = siteRepository.GetAllProducts();
-            return this.Json(allProductModels.ToDataSourceResult(request, this.ModelState));
-
-            //return this.Json(null);
+            return this.Json(siteRepository.GetAllProducts().ToDataSourceResult(request, this.ModelState));
         }
 
     //    var product = siteRepository.GetProductById(productModel.Id);

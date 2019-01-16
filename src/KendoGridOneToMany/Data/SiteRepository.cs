@@ -73,11 +73,12 @@
         public List<ProductModel> AddCategory(ProductModel updatedProduct)
         {
             var product = products.Where(i => i.Id == updatedProduct.Id).First();
+            var category = categories.Where(i => i.Id == updatedProduct.CategoryId).First();
             var index = products.IndexOf(product);
 
             if (index != -1)
             {
-                products[index].Categories.Add(updatedProduct.Category);
+                products[index].Categories.Add(category);
             }
 
             return products;

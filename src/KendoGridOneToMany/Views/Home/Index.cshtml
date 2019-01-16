@@ -1,4 +1,8 @@
-﻿@using KendoGridOneToMany.Models
+﻿@model ProductModel
+
+@using KendoGridOneToMany.Models
+
+
 
 @{
     ViewBag.Title = "Kendo Page";
@@ -7,45 +11,51 @@
 <h1>Grid here</h1>
 
 @(Html.Kendo().Grid<ProductModel>()
-            .Name("persons")
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .Model(model => model.Id(m => m.Id))
-                .Read(read => read.Action("GetProducts", "Home"))
-                .Update(up => up.Action("UpdateCategory", "Home"))
-                .Create(x => x.Action("CreateProduct", "Home"))
-        )
-        .ToolBar(x => x.Create())
-        .Columns(columns =>
-        {
-            columns.Bound(c => c.Id).Width(200);
-            columns.Bound(c => c.Type);
-            columns.Bound(c => c.DisplayCatogories);
-            columns.Command(cmd => cmd.Edit());
-        })
-        .Events(ev => ev.Edit("addDeleteButton"))
-        .Pageable()
-        .Sortable()
-.Editable(ed => ed.Mode(GridEditMode.PopUp).TemplateName("PopUpView"))
+                                    .Name("persons")
+                                    .AutoBind(true)
+                                .DataSource(dataSource => dataSource
+                                    .Ajax()
+                                    .Model(model => model.Id(m => m.Id))
+                                        .Read(read => read.Action("GetProducts", "Home"))
+                                        .Update(up => up.Action("UpdateCategory", "Home"))
+                                        .Create(x => x.Action("CreateProduct", "Home"))
+  
+
+                                )
+                                .ToolBar(x => x.Create())
+                                .Columns(columns =>
+                                {
+                                    columns.Bound(c => c.Id).Width(200);
+                                    columns.Bound(c => c.Type);
+                                    columns.Bound(c => c.DisplayCatogories);
+                                    columns.Command(cmd => cmd.Edit());
+                                })
+                                .Events(ev => ev.Edit("addDeleteButton"))
+                                .Pageable()
+                                .Sortable()
+                        .Editable(ed => ed.Mode(GridEditMode.PopUp).TemplateName("PopUpView"))
 
 )
 
+
 @*<h2>Kendo UI DatePicker</h2>
 
-@(Html.Kendo().DatePicker()
-            .Name("datepicker")
-)*@
+    @(Html.Kendo().DatePicker()
+                .Name("datepicker")
+    )*@
 
 <script type="text/javascript">
     function addDeleteButton(e) {
         var grid = e.sender;
         var table = grid.table;
         var uid = e.model.uid;
+        alert(e.model.Id);
         $('<a class="k-button k-button-icontext k-grid-delete custom" href="\\#"k-icon k-i-delete"></span>Delete</a>').insertAfter(".k-grid-update");
-        $('.k-window-title').text("Edit Roles");
+        $('.k-window-title').text("Edit Categories");
         $(".custom").click(function (e) {
             e.preventDefault();
-            var formContainer = $("#PopUpView");
+            var formContainer = $("#popUpForm");
+            alert(formContainer)
             SubmitInfo(formContainer);
         });
     }
@@ -54,18 +64,21 @@
 
         var grid = $("#persons").data("kendoGrid"),
             parameterMap = grid.dataSource.transport.parameterMap;
-        var data = parameterMap({ sort: grid.dataSource.sort(), filter: grid.dataSource.filter(), group: grid.dataSource.group() });
+        //var data = parameterMap({ sort: grid.dataSource.sort(), filter: grid.dataSource.filter(), group: grid.dataSource.group() });
+        var data = $("#persons").data('kendoGrid').dataSource.data();
+
         $.ajax({
-            url: "Home/Delete",
-            type: 'post',
-            dataType: 'json',
+            url: '@Url.Action("Delete", "Home")',
+            type: "POST",
+            dataType: "JSON",
             //data: formContainer.serialize(),
             data: data + "&" + formContainer.serialize(),
             success: function (result) {
                 if (result.Errors) {
                     //Send error message to grid
+                    alert(result.Errors.RoleNotExist.errors[0])
                     var grid = $("#persons").data("kendoGrid");
-                    //showMessage(grid.editable.element, result.Errors.RoleNotExist.errors[0], result.Errors.RoleNotExist.errors);
+                    showMessage(grid.editable.element, result.Errors.RoleNotExist.errors[0], result.Errors.RoleNotExist.errors);
                 }
                 else {
                     // Clear the input tags
@@ -79,26 +92,26 @@
         });
     }
 
-    //var validationMessageTmpl = kendo.template($("#message").html());
+    var validationMessageTmpl = kendo.template($("#message").html());
 
-    //// handle grid error event
-    //error = function (args) {
-    //    if (args.errors) {
-    //        var grid = $("#persons").data("kendoGrid");
-    //        grid.one("dataBinding", function (e) {
-    //            e.preventDefault();   // cancel grid rebind if error occurs
-    //            for (var error in args.errors) {
-    //                showMessage(grid.editable.element, error, args.errors[error].errors);
-    //            }
-    //        });
-    //    }
-    //}
+    // handle grid error event
+    error = function (args) {
+        if (args.errors) {
+            var grid = $("#persons").data("kendoGrid");
+            grid.one("dataBinding", function (e) {
+                e.preventDefault();   // cancel grid rebind if error occurs
+                for (var error in args.errors) {
+                    showMessage(grid.editable.element, error, args.errors[error].errors);
+                }
+            });
+        }
+    }
 
-    //function showMessage(container, name, errors) {
-    //    //add the validation message to the form
-    //    container.find("[data-valmsg-for=" + "Id" + "]")
-    //        .replaceWith(validationMessageTmpl({ field: name, message: errors[0] }));
-    //}
+    function showMessage(container, name, errors) {
+        //add the validation message to the form
+        container.find("[data-valmsg-for=" + "CategoryId" + "]")
+            .replaceWith(validationMessageTmpl({ field: name, message: errors[0] }));
+    }
 
 </script>
 
