@@ -15,6 +15,7 @@
                                     .AutoBind(true)
                                 .DataSource(dataSource => dataSource
                                     .Ajax()
+                                    .ServerOperation(false)
                                     .Model(model => model.Id(m => m.Id))
                                         .Read(read => read.Action("GetProducts", "Home"))
                                         .Update(up => up.Action("UpdateCategory", "Home"))
@@ -44,28 +45,49 @@
                 .Name("datepicker")
     )*@
 
+
+
 <script type="text/javascript">
     function addDeleteButton(e) {
         var grid = e.sender;
         var table = grid.table;
         var uid = e.model.uid;
-        alert(e.model.Id);
         $('<a class="k-button k-button-icontext k-grid-delete custom" href="\\#"k-icon k-i-delete"></span>Delete</a>').insertAfter(".k-grid-update");
         $('.k-window-title').text("Edit Categories");
         $(".custom").click(function (e) {
             e.preventDefault();
             var formContainer = $("#popUpForm");
-            alert(formContainer)
             SubmitInfo(formContainer);
         });
     }
+
+    @*<script type="text/kendo-template" id="message">
+    <div class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" style="margin: 0.5em; display: block; " data-for="#=field#" data-valmsg-for="#=field#" id="#=field#_validationMessage">
+        <span class="k-icon k-warning">
+        </span>
+        #=message#
+        <div class="k-callout k-callout-n">
+        </div>
+    </div>
+</script>*@
+
+    var validationMessageTmpl = kendo.template(
+        "<div id='#=message#_validationMessage' " +
+        "class='k-widget k-tooltip k-tooltip-validation " +
+        "k-invalid-msg field-validation-error' " +
+        "style='margin: 0.5em; display: block;' data-for='#=field#' " +
+        "data-val-msg-for='#=field#' role='alert'>" +
+        "<span class='k-icon k-warning'></span>" +
+        "#=message#" +
+        "<div class='k-callout k-callout-n'></div>" +
+        "</div>");
 
     function SubmitInfo(formContainer) {
 
         var grid = $("#persons").data("kendoGrid"),
             parameterMap = grid.dataSource.transport.parameterMap;
-        //var data = parameterMap({ sort: grid.dataSource.sort(), filter: grid.dataSource.filter(), group: grid.dataSource.group() });
-        var data = $("#persons").data('kendoGrid').dataSource.data();
+        var data = parameterMap({ sort: grid.dataSource.sort(), filter: grid.dataSource.filter(), group: grid.dataSource.group() });
+        //var data = $("#persons").data('kendoGrid').dataSource.data();
 
         $.ajax({
             url: '@Url.Action("Delete", "Home")',
@@ -76,7 +98,6 @@
             success: function (result) {
                 if (result.Errors) {
                     //Send error message to grid
-                    alert(result.Errors.RoleNotExist.errors[0])
                     var grid = $("#persons").data("kendoGrid");
                     showMessage(grid.editable.element, result.Errors.RoleNotExist.errors[0], result.Errors.RoleNotExist.errors);
                 }
@@ -92,15 +113,18 @@
         });
     }
 
-    var validationMessageTmpl = kendo.template($("#message").html());
+    //var validationMessageTmpl = kendo.template($("#message").html());
+    //var validationMessageTmpl = "hello"
 
     // handle grid error event
     error = function (args) {
         if (args.errors) {
             var grid = $("#persons").data("kendoGrid");
+            alert("Here")
             grid.one("dataBinding", function (e) {
                 e.preventDefault();   // cancel grid rebind if error occurs
                 for (var error in args.errors) {
+
                     showMessage(grid.editable.element, error, args.errors[error].errors);
                 }
             });
@@ -109,8 +133,19 @@
 
     function showMessage(container, name, errors) {
         //add the validation message to the form
-        container.find("[data-valmsg-for=" + "CategoryId" + "]")
+        container.find("[data-valmsg-for=" + "\"CategoryId\"" + "]")
             .replaceWith(validationMessageTmpl({ field: name, message: errors[0] }));
+        container.find("input[name=" + CategoryId + "]").focus();
+
+        
+    }
+
+    function onChange(e) {
+        var grid = $("#persons").data("kendoGrid")
+        grid.editable.element.find("[data-val-msg-for=" + "\"CategoryModel is not assigned to user\"" + "]").html("");
+        //gridElement.find("[data-valmsg-for=" + CategoryId + "],[data-val-msg-for=" + CategoryId + "]")
+
+
     }
 
 </script>

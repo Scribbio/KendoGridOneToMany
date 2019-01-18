@@ -70,18 +70,18 @@
             return updatedProduct;
         }
 
-        public List<ProductModel> AddCategory(ProductModel updatedProduct)
+        public ProductModel AddCategory(ProductModel updatedProduct)
         {
             var product = products.Where(i => i.Id == updatedProduct.Id).First();
             var category = categories.Where(i => i.Id == updatedProduct.CategoryId).First();
-            var index = products.IndexOf(product);
 
-            if (index != -1)
+            if (!product.Categories.Contains(category))
             {
-                products[index].Categories.Add(category);
+                product.Categories.Add(category);
+                return product;
             }
 
-            return products;
+            return null;
         }
 
         public CategoryModel GetCategoryById(int iD)

@@ -2,8 +2,20 @@
 
 
 <div>
-    <fieldset id="popUpForm">
+    @Html.ValidationMessageFor(m => m.CategoryId)
+    @Html.ValidationSummary(true)
+
+
+</div>
+<br />
+<br />
+<div class="col-5">
+    <fieldset id="popUpForm" @*style="padding: 10px;" *@>
         <dl>
+
+            @Html.LabelFor(x => Model.Category.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+
+
             <dt>
                 @Html.HiddenFor(m => m.Categories)
             </dt>
@@ -17,47 +29,61 @@
             </dt>
             <dd>
 
-                @Html.ValidationMessageFor(m => m.CategoryId)
-
-                @(Html.Kendo().DropDownListFor(m => m.CategoryId).AutoBind(true).OptionLabel("Select Category...").DataTextField("Name").DataValueField("Id").DataSource(dataSource =>
-                                                                                              { dataSource.Read(read => read.Action("GetCategories", "Home")).ServerFiltering(true); }))
 
 
+                @(Html.Kendo().DropDownListFor(m => m.CategoryId)
+                                        .AutoBind(true)
+                                        .OptionLabel("Select Category...")
+                                                    .DataTextField("Name")
+                                                    .DataValueField("Id")
+                                                    .Events(e=>e.Change("onChange"))
+                                                    .DataSource(dataSource =>
+                                                    {
+                                                        dataSource.Read(read => read.Action("GetCategories", "Home"))
+                                                          .ServerFiltering(true);
+                                                    }))
             </dd>
         </dl>
     </fieldset>
+
+
 </div>
+
+<script type="text/javascript">
+
+</script>
+
+
 
 
 @*@using (Html.BeginForm())
-{
-    <fieldset>
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.Id)
+    {
+        <fieldset>
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.Id)
 
-        <div class="editor-field">
-            @Html.ValidationMessageFor(model => model.Category)
-            @(Html.Kendo().DropDownListFor(model => model.Category)
-                                                              .OptionLabel("Select Car Model")
-                                                              .DataTextField("Name")
-                                                              .DataValueField("Id")
-                                                              .DataSource(source =>
-                                                              {
-                                                                  source.Read(read =>
+            <div class="editor-field">
+                @(Html.Kendo().DropDownListFor(model => model.Category)
+                                                                  .OptionLabel("Select Car Model")
+                                                                  .DataTextField("Name")
+                                                                  .DataValueField("Id")
+                                                                  .DataSource(source =>
                                                                   {
-                                                                      read.Action("GetCategories", "Home")
-                                                                          /*.Data("filterModels")*/;
+                                                                      source.Read(read =>
+                                                                      {
+                                                                          read.Action("GetCategories", "Home")
+                                                                              /*.Data("filterModels")*/;
+                                                                      })
+                                                                      .ServerFiltering(true);
                                                                   })
-                                                                  .ServerFiltering(true);
-                                                              })
-                                                              .Enable(true)
-                    //.AutoBind(false)
-                    //.CascadeFrom("Id")
-            )
-        </div>
-    </fieldset>
-}*@
+                                                                  .Enable(true)
+                        //.AutoBind(false)
+                        //.CascadeFrom("Id")
+                )
+            </div>
+        </fieldset>
+    }*@
 
 
 
@@ -86,7 +112,6 @@
 
 
 @*<div class="form-group">
-        @Html.LabelFor(x => Model.Category, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-5">
 
             @(Html.Kendo().DropDownListFor(m => m.Category)
@@ -102,6 +127,5 @@
                     })
             )
 
-            @Html.ValidationMessageFor(x => x.Category, "", new { @class = "text-danger" })
         </div>
     </div>*@

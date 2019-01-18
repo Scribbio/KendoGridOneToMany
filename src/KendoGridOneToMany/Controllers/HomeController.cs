@@ -58,20 +58,20 @@ namespace KendoGridOneToMany.Controllers
         }
 
 
-        public ActionResult UpdateCategory([DataSourceRequest] DataSourceRequest dsRequest, ProductModel productModel)
+        public ActionResult UpdateCategory([DataSourceRequest] DataSourceRequest request, ProductModel productModel)
         {
 
-
-            //if (productModel != null && ModelState.IsValid)
-            //{
+            if (productModel != null && ModelState.IsValid)
+            {
                 var updated = siteRepository.AddCategory(productModel);
-            //}
-            //else
-            //{
-            //    this.ModelState.AddModelError("RoleAlreadyAssigned", "Role is already assigned to user");
-            //}
 
-            return this.Json(siteRepository.GetAllProducts().ToDataSourceResult(dsRequest));
+                if(updated == null)
+                {
+                    this.ModelState.AddModelError("111111", "Role is already assigned to user");
+                }
+            }
+
+            return this.Json(siteRepository.GetAllProducts().ToDataSourceResult(request, this.ModelState));
         }
 
 
@@ -107,25 +107,27 @@ namespace KendoGridOneToMany.Controllers
             {
                 this.ModelState.AddModelError("RoleNotExist", "CategoryModel is not assigned to user");
             }
+
             return this.Json(siteRepository.GetAllProducts().ToDataSourceResult(request, this.ModelState));
         }
 
-    //    var product = siteRepository.GetProductById(productModel.Id);
-    //    var categoryToRemove = user.UserRoles.SingleOrDefault(r => r.Id == userViewModel.RoleId);
-    //        if (roleToRemove != null)
-    //        {
-    //            user.UserRoles.Remove(roleToRemove);
-    //            this.userService.Update(user);
-    //        }
-    //        else
-    //        {
-    //            this.ModelState.AddModelError("RoleNotExist", "CategoryModel is not assigned to user");
-    //}
+        //private void CustomValidateModel(LocationViewModel model)
+        //{
+        //    var existingEntity = _repository.GetAll<Location>()
+        //                                        .Where(o => o.ID != model.ID)
+        //                                        .Where(o => o.DisplayName.Equals(model.DisplayName))
+        //                                        .FirstOrDefault();
 
-    //List<UserViewModel> allUsersViewModels = this.userService.GetUserList().ToList();
-    //        return this.Json(allUsersViewModels.ToDataSourceResult(request, this.ModelState));
+        //    if (existingEntity != null)
+        //    {
+        //        if (existingEntity.Deleted == false)
+        //            ModelState.AddModelError("DisplayName", "Name already exists.");
+        //        else
+        //            ModelState.AddModelError("DisplayName", "Name '" + existingEntity.DisplayName + "' already exists in DB, but deleted.");
+        //    }
+        //}
 
-    //        return this.Json(null);
+
 
     }
 }
