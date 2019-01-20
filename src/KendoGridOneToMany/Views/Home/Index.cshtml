@@ -11,30 +11,30 @@
 <h1>Grid here</h1>
 
 @(Html.Kendo().Grid<ProductModel>()
-                                    .Name("persons")
-                                    .AutoBind(true)
-                                .DataSource(dataSource => dataSource
-                                    .Ajax()
-                                    .ServerOperation(false)
-                                    .Model(model => model.Id(m => m.Id))
-                                        .Read(read => read.Action("GetProducts", "Home"))
-                                        .Update(up => up.Action("UpdateCategory", "Home"))
-                                        .Create(x => x.Action("CreateProduct", "Home"))
-  
+                                        .Name("persons")
+                                        .AutoBind(true)
+                                    .DataSource(dataSource => dataSource
+                                        .Ajax()
+                                        .ServerOperation(false)
+                                        .Model(model => model.Id(m => m.Id))
+                                            .Read(read => read.Action("GetProducts", "Home"))
+                                            .Update(up => up.Action("UpdateCategory", "Home"))
+                                            .Create(x => x.Action("CreateProduct", "Home"))
+                                            .Destroy(x => x.Action("UpdateCategory", "Home"))
+                                    )
+                                    .ToolBar(x => x.Create())
+                                    .Columns(columns =>
+                                    {
+                                        columns.Bound(c => c.Id).Width(200);
+                                        columns.Bound(c => c.Type);
+                                        columns.Bound(c => c.DisplayCatogories);
+                                        columns.Command(cmd => cmd.Edit());
 
-                                )
-                                .ToolBar(x => x.Create())
-                                .Columns(columns =>
-                                {
-                                    columns.Bound(c => c.Id).Width(200);
-                                    columns.Bound(c => c.Type);
-                                    columns.Bound(c => c.DisplayCatogories);
-                                    columns.Command(cmd => cmd.Edit());
-                                })
-                                .Events(ev => ev.Edit("addDeleteButton"))
+                                    })
+                                    .Events(ev => ev.Edit("addDeleteButton"))
                                 .Pageable()
                                 .Sortable()
-                        .Editable(ed => ed.Mode(GridEditMode.PopUp).TemplateName("PopUpView"))
+                        .Editable(ed => ed.Mode(GridEditMode.PopUp).TemplateName("_PopUpView"))
 
 )
 
@@ -49,10 +49,7 @@
 
 <script type="text/javascript">
     function addDeleteButton(e) {
-        var grid = e.sender;
-        var table = grid.table;
-        var uid = e.model.uid;
-        $('<a class="k-button k-button-icontext k-grid-delete custom" href="\\#"k-icon k-i-delete"></span>Delete</a>').insertAfter(".k-grid-update");
+        $('<a class="k-button k-grid-add k-button-icontext custom" href="\\#"k-icon k-i-delete"></span>Delete</a>').insertAfter(".k-grid-update");
         $('.k-window-title').text("Edit Categories");
         $(".custom").click(function (e) {
             e.preventDefault();
@@ -84,8 +81,8 @@
 
     function SubmitInfo(formContainer) {
 
-        var grid = $("#persons").data("kendoGrid"),
-            parameterMap = grid.dataSource.transport.parameterMap;
+        var grid = $("#persons").data("kendoGrid");
+        var parameterMap = grid.dataSource.transport.parameterMap;
         var data = parameterMap({ sort: grid.dataSource.sort(), filter: grid.dataSource.filter(), group: grid.dataSource.group() });
         //var data = $("#persons").data('kendoGrid').dataSource.data();
 
@@ -99,7 +96,7 @@
                 if (result.Errors) {
                     //Send error message to grid
                     var grid = $("#persons").data("kendoGrid");
-                    showMessage(grid.editable.element, result.Errors.RoleNotExist.errors[0], result.Errors.RoleNotExist.errors);
+                    showMessage(grid.editable.element, result.Errors.CategoryNotExist.errors[0], result.Errors.CategoryNotExist.errors);
                 }
                 else {
                     // Clear the input tags
@@ -113,8 +110,7 @@
         });
     }
 
-    //var validationMessageTmpl = kendo.template($("#message").html());
-    //var validationMessageTmpl = "hello"
+    var validationMessageTmpl = kendo.template($("#message").html());
 
     // handle grid error event
     error = function (args) {
@@ -123,29 +119,18 @@
             alert("Here")
             grid.one("dataBinding", function (e) {
                 e.preventDefault();   // cancel grid rebind if error occurs
-                for (var error in args.errors) {
+                //for (var error in args.errors) {
 
                     showMessage(grid.editable.element, error, args.errors[error].errors);
-                }
+                //}
             });
         }
     }
 
     function showMessage(container, name, errors) {
         //add the validation message to the form
-        container.find("[data-valmsg-for=" + "\"CategoryId\"" + "]")
-            .replaceWith(validationMessageTmpl({ field: name, message: errors[0] }));
-        container.find("input[name=" + CategoryId + "]").focus();
-
-        
-    }
-
-    function onChange(e) {
-        var grid = $("#persons").data("kendoGrid")
-        grid.editable.element.find("[data-val-msg-for=" + "\"CategoryModel is not assigned to user\"" + "]").html("");
-        //gridElement.find("[data-valmsg-for=" + CategoryId + "],[data-val-msg-for=" + CategoryId + "]")
-
-
+        container.find("[data-valmsg-for=" + "\"Category\"" + "]")
+            .replaceWith(validationMessageTmpl({ field: name, message: errors[0] }));      
     }
 
 </script>

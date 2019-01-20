@@ -1,0 +1,35 @@
+﻿@model ProductModel
+
+<fieldset id="popUpForm">
+
+    @Html.HiddenFor(m => m.Categories)
+
+    @Html.ValidationMessageFor(m => m.CategoryId)
+
+    @Html.ValidationMessageFor(m => m.Category)
+
+    @Html.HiddenFor(m => m.Categories)
+    @Html.HiddenFor(m => m.Id)
+    <br/>
+    <br/>
+
+    <p>
+
+        @(Html.Kendo().DropDownListFor(m => m.CategoryId)
+                                .AutoBind(true)
+                                .OptionLabel("Select Category...")
+                                            //.Events(e => e.Change("onChange"))
+                                            .HtmlAttributes(new { style = "padding:10px;" })
+
+                                            .DataTextField("Name")
+                                            .DataValueField("Id")
+                                            .DataSource(dataSource =>
+                                            {
+                                                dataSource.Read(read => read.Action("GetCategories", "Home"))
+                                                    .ServerFiltering(true);
+
+                                            }))
+    </p>
+</fieldset>
+
+

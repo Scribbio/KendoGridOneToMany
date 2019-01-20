@@ -60,15 +60,18 @@ namespace KendoGridOneToMany.Controllers
 
         public ActionResult UpdateCategory([DataSourceRequest] DataSourceRequest request, ProductModel productModel)
         {
-
             if (productModel != null && ModelState.IsValid)
             {
                 var updated = siteRepository.AddCategory(productModel);
 
-                if(updated == null)
-                {
-                    this.ModelState.AddModelError("111111", "Role is already assigned to user");
-                }
+                //if(productModel.Category == null)
+                //{
+                //    this.ModelState.AddModelError("111111", "Please choose a role");
+                //}
+                //if (updated == null)
+                //{
+                //    this.ModelState.AddModelError("2222222", "Role is already assigned to user");
+                //}
             }
 
             return this.Json(siteRepository.GetAllProducts().ToDataSourceResult(request, this.ModelState));
@@ -105,7 +108,7 @@ namespace KendoGridOneToMany.Controllers
             }
             else
             {
-                this.ModelState.AddModelError("RoleNotExist", "CategoryModel is not assigned to user");
+                this.ModelState.AddModelError("CategoryNotExist", "This Category is not assigned to this product");
             }
 
             return this.Json(siteRepository.GetAllProducts().ToDataSourceResult(request, this.ModelState));

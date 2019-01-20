@@ -73,15 +73,12 @@
         public ProductModel AddCategory(ProductModel updatedProduct)
         {
             var product = products.Where(i => i.Id == updatedProduct.Id).First();
-            var category = categories.Where(i => i.Id == updatedProduct.CategoryId).First();
-
-            if (!product.Categories.Contains(category))
+            if(updatedProduct.CategoryId != null)
             {
+                var category = categories.Where(i => i.Id == updatedProduct.CategoryId).First();
                 product.Categories.Add(category);
-                return product;
             }
-
-            return null;
+            return product;
         }
 
         public CategoryModel GetCategoryById(int iD)
